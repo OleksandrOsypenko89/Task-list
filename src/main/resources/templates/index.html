@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo-list</title>
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+
+<body class="center">
+<h2>Todo List</h2>
+
+<div>
+    <table class="padding">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Status</th>
+        </tr>
+
+        <tr th:each="task, count : ${allTasks}">
+
+            <div th:if="${task.id != editTaskId}">
+                <td>
+                    <p th:text="${task.id}"/>
+                </td>
+                <td>
+                    <p th:text="${task.description}"/>
+                </td>
+                <td>
+                    <p th:text="${task.status}"/>
+                </td>
+                <td>
+                    <form th:action="@{/edit}" method="post">
+                        <input type="hidden" th:name="${'task'}" th:value="${task.id}"/>
+                        <button type="submit">Edit</button>
+                    </form>
+                </td>
+            </div>
+
+            <div th:if="${task.id == editTaskId}">
+                <form method="post" th:action="@{/save}" th:object="${editTask}">
+                    <td>
+                        <input type="hidden" th:field="*{id}">
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{description}"/>
+                    </td>
+                    <td>
+                        <select th:field="*{status}">
+                            <option th:each="stat : ${allStatuses}" th:value="${stat}" th:text="${stat}"/>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit">Save</button>
+                    </td>
+                </form>
+            </div>
+
+            <td>
+                <form th:action="@{/delete}" method="post">
+                    <input type="hidden" th:name="${'task'}" th:value="${task.id}"/>
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+
+        </tr>
+    </table>
+
+    <table class="padding">
+        <tr>
+            <th>Add new task:</th>
+        </tr>
+    </table>
+
+    <table class="padding">
+        <form method="post" th:action="@{/create}" th:object="${newTask}">
+            <tr>
+                <td>-</td>
+                <td>
+                    <input type="text" th:field="*{description}">
+                </td>
+                <td>
+                    <select th:field="*{status}">
+                        <option th:each="stat : ${allStatuses}" th:value="${stat}" th:text="${stat}"/>
+                    </select>
+                </td>
+                <td>
+                    <button type="submit">Save</button>
+                </td>
+            </tr>
+        </form>
+    </table>
+
+    <br>
+
+    <div th:if="${page.totalPages > 1}">
+        <span th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+            <button type="button"><a th:href="@{'/?page=' + ${i - 1}}">[[${i}]]</a></button>
+        </span>
+    </div>
+
+</div>
+</body>
+</html>
