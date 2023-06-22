@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+
+  app:
+#    Служба app собирается с использованием Dockerfile, расположенного в текущем контексте сборки.
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+#    depends_on указывает, что служба app должна быть запущена после службы db
+    depends_on:
+      - db
+    environment:
+#      Переменные среды определяют настройки подключения к базе данных PostgreSQL для вашего приложения.
+#      В данном случае, URL подключения указывает на имя службы db в Docker Compose сети.
+      DB_URL: "jdbc:postgresql://db:5432/postgres"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "postgres"

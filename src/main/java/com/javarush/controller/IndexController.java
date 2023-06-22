@@ -18,7 +18,6 @@ public class IndexController {
     private final TaskService taskService;
     private int pageNumber;
     private int sizePages;
-
     public IndexController(TaskService taskService) {
         this.taskService = taskService;
     }

@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @Entity
-@Table(name = "task", schema = "todo")
+@Table(name = "task")
 public class Task {
 
     @Id

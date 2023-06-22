@@ -16,3 +16,7 @@ table td {
     padding-left: 35%;
     padding-right: 35%;
 }
+
+.colorButton {
+    background: darkgray;
+}
