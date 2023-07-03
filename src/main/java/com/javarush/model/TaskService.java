@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 @Data
 @RequiredArgsConstructor
 public class TaskService {
+
     private TodoRepository todoListRepository;
-
-    private Task editTask;
-
     @Autowired
     public TaskService(TodoRepository todoListRepository) {
         this.todoListRepository = todoListRepository;
@@ -22,8 +20,8 @@ public class TaskService {
     public void deleteTask(Task task) {
         todoListRepository.delete(task);
     }
-
     public void updateTask(Task task) {
         todoListRepository.save(task);
     }
 }
+

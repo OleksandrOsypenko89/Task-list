@@ -13,10 +13,21 @@ table td {
 }
 
 .padding {
-    padding-left: 35%;
-    padding-right: 35%;
+    padding-left: 30%;
+    padding-right: 30%;
 }
 
 .colorButton {
-    background: darkgray;
+    background: #73A353;
+}
+
+button {
+    color: black; /* Белый цвет текста */
+    border: none; /* Убираем рамку */
+    padding: 0.5rem 1rem; /* Поля вокруг текста */
+}
+
+.container-buttons {
+    display: flex;
+    justify-content: center;
 }

@@ -3,6 +3,7 @@ package com.javarush.controller;
 import com.javarush.domian.Status;
 import com.javarush.domian.Task;
 import com.javarush.model.TaskService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("")
 public class IndexController {
     private final TaskService taskService;
-    private int pageNumber;
-    private int sizePages;
-    public IndexController(TaskService taskService) {
+    private final HttpSession session;
+
+    public IndexController(TaskService taskService, HttpSession session) {
         this.taskService = taskService;
+        this.session = session;
     }
 
     @GetMapping
@@ -32,14 +34,14 @@ public class IndexController {
         model.addAttribute("allStatuses", Status.values());
         model.addAttribute("newTask", task);
 
-        if (taskService.getEditTask() != null) {
-            model.addAttribute("editTaskId", taskService.getEditTask().getId());
-            model.addAttribute("editTask", taskService.getEditTask());
+        if (session.getAttribute("editTask") != null) {
+            Task editTask = (Task) session.getAttribute("editTask");
+            model.addAttribute("editTaskId", editTask.getId());
+            model.addAttribute("editTask", editTask);
         }
 
-        model.addAttribute("pageNumber", pageNumber);
-        pageNumber = taskPage.getNumber();
-        sizePages = taskPage.getTotalPages() - 1;
+        session.setAttribute("pageNumber", taskPage.getNumber());
+        session.setAttribute("sizePages", taskPage.getTotalPages() - 1);
 
         return "index";
     }
@@ -47,25 +49,25 @@ public class IndexController {
     @PostMapping("/create")
     public String create(Task task) {
         taskService.updateTask(task);
-        return "redirect:/?page=" + sizePages;
+        return "redirect:/?page=" + session.getAttribute("sizePages");
     }
 
     @PostMapping("/save")
     public String save(Task task) {
         taskService.updateTask(task);
-        taskService.setEditTask(null);
-        return "redirect:/?page=" + pageNumber;
+        session.removeAttribute("editTask");
+        return "redirect:/?page=" + session.getAttribute("pageNumber");
     }
 
     @PostMapping("/delete")
     public String delete(Task task) {
         taskService.deleteTask(task);
-        return "redirect:/?page=" + pageNumber;
+        return "redirect:/?page=" + session.getAttribute("pageNumber");
     }
 
     @PostMapping("/edit")
     public String edit(Task task) {
-        taskService.setEditTask(task);
-        return "redirect:/?page=" + pageNumber;
+        session.setAttribute("editTask", task);
+        return "redirect:/?page=" + session.getAttribute("pageNumber");
     }
 }

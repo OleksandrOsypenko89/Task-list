@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Todo-list</title>
@@ -17,11 +17,11 @@
             <th>Status</th>
         </tr>
 
-        <tr th:each="task, count : ${allTasks}">
+        <tr th:each="task, numTaskViev : ${allTasks}">
 
             <div th:if="${task.id != editTaskId}">
                 <td>
-                    <p th:text="${task.id}"/>
+                    <p th:text="${session.pageNumber * 10 + numTaskViev.count}"/>
                 </td>
                 <td>
                     <p th:text="${task.description}"/>
@@ -51,7 +51,7 @@
                         </select>
                     </td>
                     <td>
-                        <button type="submit">Save</button>
+                        <button type="submit" onclick="alert('The modified task has been moved to the end of the task list')">Save</button>
                     </td>
                 </form>
             </div>
@@ -94,9 +94,16 @@
     <br>
 
     <div th:if="${page.totalPages > 1}">
-        <span th:each="i : ${#numbers.sequence(1, page.totalPages)}">
-            <button type="button"><a th:href="@{'/?page=' + ${i - 1}}">[[${i}]]</a></button>
-        </span>
+        <div class="container-buttons">
+            <span th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+                <div th:if="${session.pageNumber == i - 1}">
+                    <button class="colorButton"><a th:href="@{'/?page=' + ${i - 1}}">[[${i}]]</a></button>
+                </div>
+                <div th:if="${session.pageNumber != i - 1}">
+                    <button><a th:href="@{'/?page=' + ${i - 1}}">[[${i}]]</a></button>
+                </div>
+            </span>
+        </div>
     </div>
 
 </div>
