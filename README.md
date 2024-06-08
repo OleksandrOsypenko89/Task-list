@@ -1,4 +1,4 @@
-# TODO LIST
+# TASK LIST
 
 The application receives data from the user through the web interface and writes the information to the database.
 Implemented functionality for modifying existing records (you can change the content and status of the task), as well as deleting unnecessary records.
